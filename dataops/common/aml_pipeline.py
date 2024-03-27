@@ -47,7 +47,7 @@ def get_prep_data_component(
         data_pipeline_code_dir,
         environment,
         storage_account,
-        sa_sas_token,
+        sa_acc_key,
         source_container_name,
         target_container_name,
         source_blob,
@@ -57,9 +57,9 @@ def get_prep_data_component(
     data_pipeline_code_dir = os.path.join(os.getcwd(), data_pipeline_code_dir)
     prep_data_components = []  # Initialize an empty list to store components
 
-    for asset in assets:
+    asset_str = ":".join(map(str,assets))
 
-        prep_data_component = command(
+    prep_data_component = command(
             name=name,
             display_name=display_name,
             description=description,
@@ -73,12 +73,12 @@ def get_prep_data_component(
                     --source_container_name {source_container_name} \
                     --target_container_name {target_container_name} \
                     --source_blob {source_blob} \
-                    --asset_path {asset} \
-                    --sa_sas_token {sa_sas_token}
+                    --assets_str {asset_str} \
+                    --sa_acc_key {sa_acc_key}
                     """,
             environment=environment,
         )
-        prep_data_components.append(prep_data_component)
+    prep_data_components.append(prep_data_component)
 
     return prep_data_components
 
@@ -104,7 +104,7 @@ def create_pipeline_job(
         data_pipeline_code_dir,
         aml_env_name,
         storage_account,
-        sa_sas_token,
+        sa_acc_key,
         source_container_name,
         target_container_name,
         source_blob,
@@ -118,7 +118,7 @@ def create_pipeline_job(
         data_pipeline_code_dir = data_pipeline_code_dir,
         environment = aml_env_name,
         storage_account = storage_account,
-        sa_sas_token = sa_sas_token,
+        sa_acc_key = sa_acc_key,
         source_container_name = source_container_name,
         target_container_name = target_container_name,
         source_blob = source_blob,
@@ -186,9 +186,9 @@ def main():
         required=True,
     )
     parser.add_argument(
-        "--sa_sas_token",
+        "--sa_acc_key",
         type=str,
-        help="SAS token for storage account",
+        help="SA Account key for storage account",
         required=True,
     )
 
@@ -199,7 +199,7 @@ def main():
     workspace_name = args.workspace_name
     aml_env_name = args.aml_env_name
     config_path_root_dir = args.config_path_root_dir
-    sa_sas_token = args.sa_sas_token
+    sa_acc_key = args.sa_acc_key
 
     config_path = os.path.join(os.getcwd(), f"{config_path_root_dir}/configs/dataops_config.json")
     config = json.load(open(config_path))
@@ -241,7 +241,7 @@ def main():
             data_pipeline_code_dir,
             aml_env_name,
             storage_account,
-            sa_sas_token,
+            sa_acc_key,
             source_container_name,
             target_container_name,
             source_blob,
