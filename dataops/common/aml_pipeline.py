@@ -3,30 +3,24 @@ This module creates a AML job and schedule it for the data pipeline.
 """
 from datetime import datetime
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml import MLClient
 from azure.identity import DefaultAzureCredential
-from azure.ai.ml import command
-from azure.ai.ml import Input, Output
-from azure.ai.ml import Input, Output
-from azure.ai.ml.entities import Data
+from azure.ai.ml import command, UserIdentityConfiguration, ManagedIdentityConfiguration
+from azure.ai.ml import Output
 from azure.ai.ml import MLClient
-from azure.ai.ml.constants import AssetTypes
 from azure.ai.ml.entities import (
     JobSchedule,
-    CronTrigger,
-    RecurrenceTrigger,
-    RecurrencePattern,
+    CronTrigger
 )
 import os
 import argparse
 import json
+
 
 pipeline_components = []
 
 ()
 @pipeline(
     name="ner_data_prep",
-    compute="serverless",
     description="data prep pipeline",
 )
 def ner_data_prep_pipeline(
@@ -47,11 +41,11 @@ def get_prep_data_component(
         data_pipeline_code_dir,
         environment,
         storage_account,
-        sa_acc_key,
         source_container_name,
         target_container_name,
         source_blob,
-        assets
+        assets,
+        custom_compute
 ):
     data_pipeline_code_dir = os.path.join(os.getcwd(), data_pipeline_code_dir)
     data_pipeline_code_dir = os.path.join(os.getcwd(), data_pipeline_code_dir)
@@ -73,10 +67,11 @@ def get_prep_data_component(
                     --source_container_name {source_container_name} \
                     --target_container_name {target_container_name} \
                     --source_blob {source_blob} \
-                    --assets_str {asset_str} \
-                    --sa_acc_key {sa_acc_key}
+                    --assets_str {asset_str} 
                     """,
+            compute=custom_compute,
             environment=environment,
+            identity=UserIdentityConfiguration(),
         )
     prep_data_components.append(prep_data_component)
 
@@ -104,7 +99,7 @@ def create_pipeline_job(
         data_pipeline_code_dir,
         aml_env_name,
         storage_account,
-        sa_acc_key,
+        custom_compute,
         source_container_name,
         target_container_name,
         source_blob,
@@ -118,16 +113,16 @@ def create_pipeline_job(
         data_pipeline_code_dir = data_pipeline_code_dir,
         environment = aml_env_name,
         storage_account = storage_account,
-        sa_acc_key = sa_acc_key,
         source_container_name = source_container_name,
         target_container_name = target_container_name,
         source_blob = source_blob,
-        assets = assets
+        assets = assets,
+        custom_compute=custom_compute
     )
 
     pipeline_components.extend(prep_data_component)
 
-    pipeline_job = ner_data_prep_pipeline( )
+    pipeline_job = ner_data_prep_pipeline()
 
     return pipeline_job
 
@@ -228,6 +223,9 @@ def main():
     for data_asset_config in data_asset_configs:
         assets.append(data_asset_config['PATH'])
 
+    # setup compute_name
+    custom_compute_name = config["COMPUTE_NAME"]
+
     aml_client = get_aml_client(
         subscription_id,
         resource_group_name,
@@ -241,7 +239,7 @@ def main():
             data_pipeline_code_dir,
             aml_env_name,
             storage_account,
-            sa_acc_key,
+            custom_compute_name,
             source_container_name,
             target_container_name,
             source_blob,
