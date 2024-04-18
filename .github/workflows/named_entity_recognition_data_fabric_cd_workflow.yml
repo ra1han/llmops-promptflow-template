@@ -95,12 +95,11 @@ jobs:
         with:
           step_name: "Create data store"
           script_parameter: |
-            python -m dataops.common.aml_data_store \
+            python -m dataops.common.fabric_data_store \
             --subscription_id ${{ inputs.subscription_id }} \
             --resource_group_name ${{ inputs.resource_group_name }} \
             --workspace_name ${{ inputs.workspace_name }} \
-            --config_path_root_dir ${{ inputs.config_path_root_dir }} \
-            --sa_key ${{ secrets.SA_KEY }} 
+            --config_path_root_dir ${{ inputs.config_path_root_dir }} 
 
       - name: Register data asset
         uses: ./.github/actions/execute_script
