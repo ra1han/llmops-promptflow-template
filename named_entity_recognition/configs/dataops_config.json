@@ -18,7 +18,7 @@
     "ONELAKE":
         {
             "WORKSPACE_NAME": "45322c90-118d-4ba7-83d5-ffd408310590",
-            "ENDPOINT": "https://msit-onelake.dfs.fabric.microsoft.com/45322c90-118d-4ba7-83d5-ffd408310590/4b4ddffb-c362-4908-8dcd-0bce9bf3646b/Files",
+            "ENDPOINT": "https://msit-onelake.dfs.fabric.microsoft.com",
             "ARTIFACT_NAME": "4b4ddffb-c362-4908-8dcd-0bce9bf3646b"
         },
     "PATH":
