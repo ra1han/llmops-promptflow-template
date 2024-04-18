@@ -1,5 +1,5 @@
 {
-    "DATA_STORE_NAME": "ner_data_store",
+    "DATA_STORE_NAME": "ner_data_store_fabric",
     "COMPUTE_NAME": "ner_compute",
     "DATA_STORE_DESCRIPTION": "pipeline data store description for evaluation",
     "DATA_PREP_COMPONENT":
