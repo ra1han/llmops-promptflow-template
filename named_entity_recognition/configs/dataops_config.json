@@ -18,7 +18,7 @@
     "ONELAKE":
         {
             "WORKSPACE_NAME": "mango_onelake_workspace",
-            "ENDPOINT": "https://msit-onelake.dfs.fabric.microsoft.com",
+            "ENDPOINT": "msit-onelake.dfs.fabric.microsoft.com",
             "ARTIFACT_NAME": "mango_lake"
         },
     "PATH":
