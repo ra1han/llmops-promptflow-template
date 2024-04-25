@@ -17,9 +17,9 @@
         },
     "ONELAKE":
         {
-            "WORKSPACE_NAME": "mango_onelake_workspace",
-            "ENDPOINT": "msit-onelake.dfs.fabric.microsoft.com",
-            "ARTIFACT_NAME": "mango_lake"
+            "WORKSPACE_NAME": "dataopstest",
+            "ENDPOINT": "dataopstest.dfs.fabric.microsoft.com",
+            "ARTIFACT_NAME": "datalakehousetest"
         },
     "PATH":
         {
